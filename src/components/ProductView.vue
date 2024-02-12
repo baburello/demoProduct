@@ -13,7 +13,7 @@
                     <img v-bind:src="productImage" alt="" />
                 </div>
                 <div class="content">
-                    <h1>{{ product }}</h1>
+                    <h1>{{ title }}</h1>
                     <div class="stockInfo">
                         <span class="green" v-if="inventory > 10"
                             >In stock</span
@@ -32,9 +32,9 @@
                     </ul>
                     <div class="variants">
                         <span
-                            v-for="variant in variants"
+                            v-for="(variant, index) in variants"
                             :key="variant.variantId"
-                            @mouseover="updateImage(variant.variantImage)"
+                            @mouseover="updateImage(index)"
                             class="colorBox"
                             :style="{ backgroundColor: variant.variantColor }"
                         ></span>
@@ -43,7 +43,7 @@
                         <button
                             v-on:click="addToCart"
                             :disabled="inventory <= 0"
-                            :class="{disabledState: inventory <= 0}"
+                            :class="{ disabledState: inventory <= 0 }"
                         >
                             Add to Cart
                         </button>
@@ -58,9 +58,9 @@ export default {
     name: "ProductView",
     data() {
         return {
-            product: "Nike Air Force",
-            productImage: require("../assets/images/nike-red.jpg"),
-            inventory: 0,
+            brand: "Nike",
+            product: "Air Force",
+            selectedVariant: 0,
             cart: 0,
             features: [
                 "Durable leather",
@@ -72,16 +72,19 @@ export default {
                     variantId: 1,
                     variantColor: "red",
                     variantImage: require("../assets/images/nike-red.jpg"),
+                    variantQty: 20,
                 },
                 {
                     variantId: 2,
                     variantColor: "white",
                     variantImage: require("../assets/images/nike-white.jpg"),
+                    variantQty: 5,
                 },
                 {
                     variantId: 3,
                     variantColor: "Black",
                     variantImage: require("../assets/images/nike-black.jpg"),
+                    variantQty: 0,
                 },
             ],
         };
@@ -90,8 +93,20 @@ export default {
         addToCart() {
             this.cart += 1;
         },
-        updateImage(variantImage) {
-            this.productImage = variantImage;
+        updateImage(index) {
+            this.selectedVariant = index;
+            console.log(index);
+        },
+    },
+    computed: {
+        title() {
+            return this.brand + " " + this.product;
+        },
+        productImage() {
+            return this.variants[this.selectedVariant].variantImage;
+        },
+        inventory() {
+            return this.variants[this.selectedVariant].variantQty;
         },
     },
 };
