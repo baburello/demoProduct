@@ -39,6 +39,7 @@
                             :style="{ backgroundColor: variant.variantColor }"
                         ></span>
                     </div>
+                    <div class="shipping">Shipping: {{ shipping }}</div>
                     <div class="addCart">
                         <button
                             v-on:click="addToCart"
@@ -51,11 +52,22 @@
                 </div>
             </div>
         </div>
+        <product-review></product-review>
+        <Product-tabs></Product-tabs>
     </div>
 </template>
 <script>
+import ProductReview from "./Product-review.vue";
+import ProductTabs from "./Product-tabs.vue";
 export default {
+    components: { ProductReview, ProductTabs },
     name: "ProductView",
+    props: {
+        member: {
+            type: Boolean,
+            require: true,
+        },
+    },
     data() {
         return {
             brand: "Nike",
@@ -107,6 +119,12 @@ export default {
         },
         inventory() {
             return this.variants[this.selectedVariant].variantQty;
+        },
+        shipping() {
+            if (this.member) {
+                return 'FREE'
+            }
+            return '$' + 2.99
         },
     },
 };

@@ -1,6 +1,7 @@
 <template>
     <div class="home">
-        <ProductView msg="Welcome to my Vue.js App" />
+        <ProductView :member="member" />
+        <!-- <ProductView/> -->
     </div>
 </template>
 
@@ -12,6 +13,11 @@ export default {
     name: "HomeView",
     components: {
         ProductView,
+    },
+    data() {
+        return {
+            member: false,
+        };
     },
 };
 </script>
