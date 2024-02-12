@@ -33,12 +33,20 @@
                     <div class="variants">
                         <span
                             v-for="variant in variants"
-                            :key="variant.variantId" v-on:mouseover="updateImage(variant.variantImage)"
-                            >{{ variant.variantColor }}</span
-                        >
+                            :key="variant.variantId"
+                            @mouseover="updateImage(variant.variantImage)"
+                            class="colorBox"
+                            :style="{ backgroundColor: variant.variantColor }"
+                        ></span>
                     </div>
                     <div class="addCart">
-                        <button v-on:click="addToCart">Add to Cart</button>
+                        <button
+                            v-on:click="addToCart"
+                            :disabled="inventory <= 0"
+                            :class="{disabledState: inventory <= 0}"
+                        >
+                            Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
@@ -52,7 +60,7 @@ export default {
         return {
             product: "Nike Air Force",
             productImage: require("../assets/images/nike-red.jpg"),
-            inventory: 1,
+            inventory: 0,
             cart: 0,
             features: [
                 "Durable leather",
@@ -84,7 +92,7 @@ export default {
         },
         updateImage(variantImage) {
             this.productImage = variantImage;
-        }
+        },
     },
 };
 </script>
