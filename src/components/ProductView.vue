@@ -1,9 +1,8 @@
 <template>
-    <div>
         <div class="container">
             <div class="product">
                 <div class="image">
-                    <img v-bind:src="productImage" alt="" />
+                    <img v-bind:src="image" alt="" />
                 </div>
                 <div class="content">
                     <h1>{{ title }}</h1>
@@ -44,31 +43,19 @@
                     </div>
                 </div>
             </div>
-            <div class="reviews">
-                <h2>Reviews</h2>
-                <p v-if="!reviews.length">There are no reviews yet</p>
-                <ul>
-                    <li v-for="(review, index) in reviews" :key="index">
-                        <p>{{ review.review }}</p>
-                        <span
-                            >- {{ review.name }}, <strong>Rating: </strong
-                            >{{ review.rating }}</span
-                        >
-                    </li>
-                </ul>
-            </div>
-            <product-review @review-submitted="addReview"></product-review>
+            <Product-tabs :reviews="reviews"></Product-tabs>
         </div>
-
-        <Product-tabs></Product-tabs>
-    </div>
 </template>
+
+
+
 <script>
-import ProductReview from "./Product-review.vue";
 import ProductTabs from "./Product-tabs.vue";
+import { eventBus } from "@/main";
+
 export default {
-    components: { ProductReview, ProductTabs },
     name: "ProductView",
+    components: { ProductTabs },
     props: {
         member: {
             type: Boolean,
@@ -118,28 +105,31 @@ export default {
         },
         updateImage(index) {
             this.selectedVariant = index;
-            console.log(index);
-        },
-        addReview(productReview) {
-            this.reviews.push(productReview);
-        },
+        }
     },
-    computed: {
-        title() {
-            return this.brand + " " + this.product;
-        },
-        productImage() {
-            return this.variants[this.selectedVariant].variantImage;
-        },
-        inventory() {
-            return this.variants[this.selectedVariant].variantQty;
-        },
-        shipping() {
-            if (this.member) {
-                return "FREE";
+        computed: {
+            title() {
+                return this.brand + " " + this.product;
+            },
+            image() {
+                return this.variants[this.selectedVariant].variantImage;
+            },
+            inventory() {
+                return this.variants[this.selectedVariant].variantQty;
+            },
+            shipping() {
+                if (this.member) {
+                    return "FREE";
+                }
+                return "$" + 2.99;
             }
-            return "$" + 2.99;
-        },
-    },
-};
+            },
+            mounted() {
+                eventBus.$on('review-submitted', productReview => {
+                    this.reviews.push(productReview)
+            });
+        }
+    }
+
+
 </script>

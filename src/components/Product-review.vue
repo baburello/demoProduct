@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { eventBus } from '@/main';
 export default {
     name: "Product-review",
     data() {
@@ -52,7 +53,7 @@ export default {
                     review: this.review,
                     rating: this.rating,
                 };
-                this.$emit("review-submitted", productReview);
+                eventBus.$emit("review-submitted", productReview);
                 (this.name = null), (this.review = null), (this.rating = null);
             } else {
                 if (!this.name) this.errors.push("Name required");
