@@ -44,8 +44,22 @@
                     </div>
                 </div>
             </div>
+            <div class="reviews">
+                <h2>Reviews</h2>
+                <p v-if="!reviews.length">There are no reviews yet</p>
+                <ul>
+                    <li v-for="(review, index) in reviews" :key="index">
+                        <p>{{ review.review }}</p>
+                        <span
+                            >- {{ review.name }}, <strong>Rating: </strong
+                            >{{ review.rating }}</span
+                        >
+                    </li>
+                </ul>
+            </div>
+            <product-review @review-submitted="addReview"></product-review>
         </div>
-        <product-review></product-review>
+
         <Product-tabs></Product-tabs>
     </div>
 </template>
@@ -91,15 +105,23 @@ export default {
                     variantQty: 0,
                 },
             ],
+
+            reviews: [],
         };
     },
     methods: {
         addToCart() {
-            this.$emit("addtocart", this.variants[this.selectedVariant].variantId);
+            this.$emit(
+                "addtocart",
+                this.variants[this.selectedVariant].variantId
+            );
         },
         updateImage(index) {
             this.selectedVariant = index;
             console.log(index);
+        },
+        addReview(productReview) {
+            this.reviews.push(productReview);
         },
     },
     computed: {
